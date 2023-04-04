@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StoryRunner": {
+      "commandName": "Project",
+      "commandLineArgs": "$(SolutionDir)Stories\\MyStory.dll"
+    }
+  }
+}
