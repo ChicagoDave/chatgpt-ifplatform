@@ -15,9 +15,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameEngine", "GameEngine\Ga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{187172CD-DF2B-4761-8FF5-798A35CF83D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrammarLibrary", "GrammarLibrary\GrammarLibrary.csproj", "{9E8E9511-F058-460D-A926-88AD5EFA9D2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrammarLibrary", "GrammarLibrary\GrammarLibrary.csproj", "{9E8E9511-F058-460D-A926-88AD5EFA9D2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserLibrary", "ParserLibrary\ParserLibrary.csproj", "{A96F4E2B-FFCE-49F4-9AE2-520BDCDECA83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParserLibrary", "ParserLibrary\ParserLibrary.csproj", "{A96F4E2B-FFCE-49F4-9AE2-520BDCDECA83}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D964E841-5F0E-4372-B04E-682A6B7374FF}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

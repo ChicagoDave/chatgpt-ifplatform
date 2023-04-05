@@ -1,4 +1,5 @@
 # chatgpt-ifplatform
+### Overview
 I used ChatGPT-4 to design and code an Interactive Fiction platform on top of .NET/C#.
 
 I've gone through several iterations to learn how to impose my will on ChatGPT-4. It's not as simple as asking it to do things and the current timeout limitations prevent extended work periods. I've had to start new chats, give it an overview of our progress, then paste in all of the current code before continuing the design and implementation process.
@@ -13,7 +14,7 @@ Now look at the [Core class](https://github.com/ChicagoDave/chatgpt-ifplatform/b
 
 You can see the fundamental IF code interacting with the World Model.
 
-Status/TO DO List
+### Status/TO DO List
 
 - match correct sentence from grammar library for tokenized sentence in Parser.Parse routine
 - identify noun, second, and third as appropriate
