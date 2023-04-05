@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\GameEngine\GameEngine.csproj" />
+    <ProjectReference Include="..\ParserLibrary\ParserLibrary.csproj" />
     <ProjectReference Include="..\StandardLibrary\StandardLibrary.csproj" />
     <ProjectReference Include="..\WorldModel\WorldModel.csproj" />
   </ItemGroup>

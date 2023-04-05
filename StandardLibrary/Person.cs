@@ -10,8 +10,8 @@ namespace StandardLibrary
     {
         public bool Alive { get; set; }
 
-        public Person(string id, string name, string description)
-            : base(id, name, description)
+        public Person(string name, string description)
+            : base(name, description)
         {
             Alive = true;
         }

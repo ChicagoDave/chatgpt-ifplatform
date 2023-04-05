@@ -8,8 +8,8 @@ namespace StandardLibrary
 {
     public class Player : Person
     {
-        public Player(string id, string name, string description)
-            : base(id, name, description)
+        public Player(string name, string description)
+            : base(name, description)
         {
         }
     }

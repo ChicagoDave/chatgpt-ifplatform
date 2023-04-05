@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\GrammarLibrary\GrammarLibrary.csproj" />
+    <ProjectReference Include="..\ParserLibrary\ParserLibrary.csproj" />
   </ItemGroup>
 
 </Project>

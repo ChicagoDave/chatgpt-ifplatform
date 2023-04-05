@@ -7,10 +7,10 @@ using static StandardLibrary.Core;
 
 namespace StandardLibrary
 {
-    public class Location : Thing, ILocation
+    public class Location : Thing
     {
-        public Location(string id, string name, string description)
-            : base(id, name, description)
+        public Location(string name, string description)
+            : base(name, description)
         {
         }
     }

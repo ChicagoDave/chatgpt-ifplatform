@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,14 +11,23 @@ namespace StandardLibrary
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public List<string>? Synonyms { get; set; }
+        public List<string>? Adjectives { get; set; }
+        public Func<string>? Description { get; set; }
+        public Func<bool>? Visible { get; set; }
+        public Func<bool>? Edable { get; set; }
+        public Func<bool>? Portable { get; set; }
+        public Func<bool>? Wearable { get; set; }
+        public Func<bool>? Lit { get; set; }
+        public Func<bool>? Mentioned { get; set; }
+        public Func<bool>? Seen { get; set; }
+        public Func<bool>? Heard { get; set; }
 
-        public Thing(string id, string name, string description)
+        public Thing(string name, string description)
         {
-            Id = id;
+            Id = IdGenerator.GetBase62(); // randonly generated 6 character unique id
             Name = name;
-            Description = description;
-        }
+            Description = () => description;
+       }
     }
-
 }

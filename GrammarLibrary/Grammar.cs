@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WorldModel;
 
 namespace GrammarLibrary
 {
@@ -8,24 +9,40 @@ namespace GrammarLibrary
     {
         private List<Token> _components;
         private Dictionary<string, List<List<Token>>> _sentences;
+        private World _world;
 
-        public Grammar()
+        public Grammar(World world)
         {
             _components = new List<Token>();
             _sentences = new Dictionary<string, List<List<Token>>>();
+
+            _world = world;
         }
 
-        public Grammar Verb(string verb, Action? action = null)
+        /// <summary>
+        /// We get a list of tokens from the parser. We need to find the sentence
+        /// that matches the tokens.
+        /// Then we need to validate the object portions with the World Model.
+        /// If that succeeds, execute the associated grammar action.
+        /// </summary>
+        /// <param name="tokens"></param>
+        /// <returns></returns>
+        public bool Validate(List<Token> tokens)
+        {
+            return true;
+        }
+
+        public Grammar Verb(string verb, Action<List<Token>?>? action = null)
         {
             return AddVerb(verb, action, ActionType.Standard);
         }
 
-        public Grammar MetaVerb(string verb, Action? action = null)
+        public Grammar MetaVerb(string verb, Action<List<Token>?>? action = null)
         {
             return AddVerb(verb, action, ActionType.Meta);
         }
 
-        private Grammar AddVerb(string verb, Action? action, ActionType actionType)
+        private Grammar AddVerb(string verb, Action<List<Token>?>? action, ActionType actionType)
         {
             _components.Add(new Token(TokenType.Verb, verb, action, actionType));
             return this;
@@ -89,7 +106,7 @@ namespace GrammarLibrary
             _components.Clear();
         }
 
-        public void OverrideActionDelegate(string verb, List<Token> sentence, Action newAction)
+        public void OverrideActionDelegate(string verb, List<Token> sentence, Action<List<Token>?> newAction)
         {
             if (_sentences.ContainsKey(verb))
             {
@@ -111,9 +128,8 @@ namespace GrammarLibrary
             return null;
         }
 
-
-
         public IReadOnlyDictionary<string, List<List<Token>>> Sentences => _sentences;
+
     }
 
     public enum ActionType
@@ -127,6 +143,8 @@ namespace GrammarLibrary
     {
         Verb,
         Noun,
+        Second,
+        Third,
         Adjective,
         Article,
         Preposition
@@ -136,10 +154,10 @@ namespace GrammarLibrary
     {
         public TokenType Type { get; }
         public string? Value { get; }
-        public Action? Delegate { get; set; }
-        public ActionType ActionType { get; }
+        public Action<List<Token>?>? Delegate { get; set; }
+        public ActionType? ActionType { get; }
 
-        public Token(TokenType type, string? value = null, Action? actionDelegate = null, ActionType actionType = ActionType.None)
+        public Token(TokenType type, string? value = null, Action<List<Token>?>? actionDelegate = null, ActionType? actionType = GrammarLibrary.ActionType.None)
         {
             Type = type;
             Value = value;

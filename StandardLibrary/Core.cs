@@ -14,10 +14,10 @@ namespace StandardLibrary
 
         public Core(World world)
         {
-            _grammar = new Grammar();
+            _grammar = new Grammar(world);
             _world = world;
 
-            Player = new Player("player", "Player", "You are a scruffy adventurer.");
+            Player = new Player("Player", "You are a scruffy adventurer.");
             _world.AddNode(Player.Id, Player);
 
             // Standard actions
@@ -45,7 +45,7 @@ namespace StandardLibrary
 
         public Core CreateLocation(string id, string name, string description, string? connectedToId = null, Direction? direction = null)
         {
-            Location location = new Location(id, name, description);
+            Location location = new Location(name, description);
             AddLocation(location, connectedToId, direction);
 
             if (connectedToId != null && direction.HasValue)
@@ -72,6 +72,12 @@ namespace StandardLibrary
             {
                 ConnectLocations(location.Id, connectedToId, direction.Value);
             }
+        }
+
+        private void AddThing(Location location, IThing thing)
+        {
+            _world.AddNode(thing.Id, thing);
+            _world.ConnectNodes(thing.Id, location.Id, EdgeType.IsIn, thing.Name);
         }
 
         private void ConnectLocations(string id1, string id2, Direction direction)
@@ -113,37 +119,37 @@ namespace StandardLibrary
             }
         }
 
-        private void Take()
+        private void Take(List<Token>? tokens)
         {
             Console.WriteLine("You take the item.");
         }
 
-        private void Examine()
+        private void Examine(List<Token>? tokens)
         {
             Console.WriteLine("You examine the item.");
         }
 
-        private void Go()
+        private void Go(List<Token>? tokens)
         {
             Console.WriteLine("You go somewhere.");
         }
 
-        private void CustomGo()
+        private void CustomGo(List<Token>? tokens)
         {
             Console.WriteLine("You go somewhere using a custom action.");
         }
 
-        private void Score()
+        private void Score(List<Token>? tokens)
         {
             Console.WriteLine("Your score is 0.");
         }
 
-        private void Restore()
+        private void Restore(List<Token>? tokens)
         {
             Console.WriteLine("Game restored.");
         }
 
-        private void Restart()
+        private void Restart(List<Token>? tokens)
         {
             Console.WriteLine("Game restarted.");
         }
