@@ -20,12 +20,9 @@
             edge1.Properties["Label"] = label; // Set the Label property
             Nodes[id1].Edges.Add(edge1);
 
-            if (edgeType == EdgeType.LeadsTo)
-            {
-                Edge edge2 = new Edge(id2, id1, edgeType);
-                edge2.Properties["Label"] = label; // Set the Label property
-                Nodes[id2].Edges.Add(edge2);
-            }
+            Edge edge2 = new Edge(id2, id1, GetReverseEdgeType(edgeType));
+            edge2.Properties["Label"] = label; // Set the Label property
+            Nodes[id2].Edges.Add(edge2);
         }
 
         private EdgeType GetReverseEdgeType(EdgeType edgeType)
