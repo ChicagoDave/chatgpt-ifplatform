@@ -8,17 +8,19 @@ namespace WorldModel
 {
     public class Edge
     {
-        public string Id1 { get; private set; }
-        public string Id2 { get; private set; }
-        public EdgeType EdgeType { get; private set; }
-        public Dictionary<string, object> Properties { get; private set; }
+        public string StartNodeId { get; private set; }
+        public string EndNodeId { get; private set; }
+        public List<GraphProperty> StartProperties { get; set; }
+        public List<GraphProperty> EndProperties { get; set; }
 
-        public Edge(string id1, string id2, EdgeType edgeType)
+        public Edge(string startNodeId, string endNodeId, GraphProperty startProperty, GraphProperty endProperty)
         {
-            Id1 = id1;
-            Id2 = id2;
-            EdgeType = edgeType;
-            Properties = new Dictionary<string, object>();
+            StartNodeId = startNodeId;
+            EndNodeId = endNodeId;
+            StartProperties = new List<GraphProperty>();
+            StartProperties.Add(startProperty);
+            EndProperties = new List<GraphProperty>();
+            EndProperties.Add(endProperty);
         }
     }
 

@@ -27,6 +27,8 @@ namespace StandardLibrary
     public interface IPerson : IThing
     {
         bool Alive { get; set; }
+        List<MemoryItem> Memory { get; set; }
+        HashSet<string> VisitedLocations { get; set; }
     }
 
     public interface IPlayer : IPerson

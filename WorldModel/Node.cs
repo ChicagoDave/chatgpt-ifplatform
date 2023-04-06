@@ -11,14 +11,24 @@ namespace WorldModel
         public string Id { get; private set; }
         public object Data { get; private set; }
         public List<Edge> Edges { get; private set; }
-        public Dictionary<string, object> Properties { get; private set; } // Add this line
+        public List<GraphProperty> Properties { get; set; }
 
-        public Node(string id, object data)
+        public Node(string id, object data, GraphProperty defaultProperty)
         {
             Id = id;
             Data = data;
             Edges = new List<Edge>();
-            Properties = new Dictionary<string, object>(); // Add this line
+            Properties = new List<GraphProperty>();
+            Properties.Add(defaultProperty);
+        }
+
+        public Node(string id, object data, List<GraphProperty> defaultProperties)
+        {
+            Id = id;
+            Data = data;
+            Edges = new List<Edge>();
+            Properties = new List<GraphProperty>();
+            Properties.AddRange(defaultProperties);
         }
     }
 }

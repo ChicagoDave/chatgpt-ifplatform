@@ -17,7 +17,7 @@ namespace GameEngine
             _story = story;
             _story.InitializeWorld();
             _grammar = new Grammar(_story.World);
-            _parser = new Parser(_grammar);
+            _parser = new Parser(_grammar, _story.World);
         }
 
         public void Run()

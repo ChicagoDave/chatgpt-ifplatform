@@ -26,11 +26,12 @@ namespace MyStory
 
         public void InitializeWorld()
         {
-            Core
+            Core.
+                WorldManager
                 .CreateLocation(LocationId.Kitchen, "Kitchen", "A clean and well-organized kitchen.")
-                .CreateLocation(LocationId.LivingRoom, "Living Room", "A cozy living room with a comfortable couch.", LocationId.Kitchen, StandardLibrary.Direction.West)
-                .CreateLocation(LocationId.FrontPorch, "Front Porch", "A small front porch with a wooden bench.", LocationId.LivingRoom, StandardLibrary.Direction.South)
-                .CreateLocation(LocationId.FrontYard, "Front Yard", "A well-maintained front yard with a beautiful garden.", LocationId.FrontPorch, StandardLibrary.Direction.Out);
+                .CreateLocation(LocationId.LivingRoom, "Living Room", "A cozy living room with a comfortable couch.", LocationId.Kitchen, Direction.West)
+                .CreateLocation(LocationId.FrontPorch, "Front Porch", "A small front porch with a wooden bench.", LocationId.LivingRoom, Direction.South)
+                .CreateLocation(LocationId.FrontYard, "Front Yard", "A well-maintained front yard with a beautiful garden.", LocationId.FrontPorch, Direction.Out);
         }
     }
 

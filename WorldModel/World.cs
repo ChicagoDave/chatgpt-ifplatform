@@ -4,52 +4,117 @@
     {
         public Dictionary<string, Node> Nodes { get; private set; }
 
+        public event EventHandler<StateChangeEventArgs>? StateChanged;
+
         public World()
         {
             Nodes = new Dictionary<string, Node>();
         }
 
-        public void AddNode(string id, object data)
+        public void AddNode(string id, object data, GraphProperty defaultProperty)
         {
-            Nodes[id] = new Node(id, data);
+            Nodes[id] = new Node(id, data, defaultProperty);
+            NodeAdded(Nodes[id]);
         }
 
-        public void ConnectNodes(string id1, string id2, EdgeType edgeType, string label)
+        public void AddNode(string id, object data, List<GraphProperty> defaultProperties)
         {
-            Edge edge1 = new Edge(id1, id2, edgeType);
-            edge1.Properties["Label"] = label; // Set the Label property
-            Nodes[id1].Edges.Add(edge1);
-
-            Edge edge2 = new Edge(id2, id1, GetReverseEdgeType(edgeType));
-            edge2.Properties["Label"] = label; // Set the Label property
-            Nodes[id2].Edges.Add(edge2);
+            Nodes[id] = new Node(id, data, defaultProperties);
+            NodeAdded(Nodes[id]);
         }
 
-        private EdgeType GetReverseEdgeType(EdgeType edgeType)
+        public void ConnectNodes(string startNodeId, string endNodeId, GraphProperty startProperty, GraphProperty endProperty)
         {
-            switch (edgeType)
+            Edge toEdge = new Edge(startNodeId, endNodeId, startProperty, endProperty);
+            Nodes[startNodeId].Edges.Add(toEdge);
+            EdgeAdded(toEdge);
+
+            Edge fromEdge = new Edge(endNodeId, startNodeId, endProperty, startProperty);
+            Nodes[endNodeId].Edges.Add(fromEdge);
+            EdgeAdded(fromEdge);
+        }
+
+        public void RemoveNode(string id)
+        {
+            if (Nodes.ContainsKey(id))
             {
-                case EdgeType.IsWithin:
-                    return EdgeType.Contains;
-                case EdgeType.Contains:
-                    return EdgeType.IsWithin;
-                case EdgeType.IsCarriedBy:
-                    return EdgeType.Holds;
-                case EdgeType.Holds:
-                    return EdgeType.IsCarriedBy;
-                case EdgeType.IsIn:
-                    return EdgeType.Hosts;
-                case EdgeType.Hosts:
-                    return EdgeType.IsIn;
-                case EdgeType.IsSupporting:
-                    return EdgeType.IsOn;
-                case EdgeType.IsOn:
-                    return EdgeType.IsSupporting;
-                case EdgeType.LeadsTo:
-                    return EdgeType.LeadsTo;
-                default:
-                    throw new ArgumentException("Invalid edge type provided.");
+                Node nodeToRemove = Nodes[id];
+                List<Edge> edgesToRemove = new List<Edge>(nodeToRemove.Edges);
+
+                // Remove all edges connected to this node
+                foreach (var edge in edgesToRemove)
+                {
+                    RemoveEdge(edge.StartNodeId, edge.EndNodeId);
+                }
+
+                Nodes.Remove(id);
+                NodeRemoved(nodeToRemove);
             }
+            else
+            {
+                throw new ArgumentException($"Node with id '{id}' not found.");
+            }
+        }
+
+        public void RemoveEdge(string sourceId, string targetId)
+        {
+            var sourceNode = Nodes[sourceId];
+            var targetNode = Nodes[targetId];
+
+            var edgeToRemove = sourceNode.Edges.FirstOrDefault(e => e.EndNodeId == targetId);
+            var reverseEdgeToRemove = targetNode.Edges.FirstOrDefault(e => e.EndNodeId == sourceId);
+
+            if (edgeToRemove != null && reverseEdgeToRemove != null)
+            {
+                sourceNode.Edges.Remove(edgeToRemove);
+                targetNode.Edges.Remove(reverseEdgeToRemove);
+                EdgeRemoved(edgeToRemove);
+            }
+            else
+            {
+                throw new ArgumentException($"Edge between '{sourceId}' and '{targetId}' not found.");
+            }
+        }
+
+        public void MoveEdge(string sourceId, string oldTargetId, string newTargetId)
+        {
+            if (Nodes.ContainsKey(newTargetId))
+            {
+                Edge? edge = Nodes[sourceId].Edges.FirstOrDefault(e => e.EndNodeId == oldTargetId);
+                if (edge != null) {
+                    RemoveEdge(sourceId, oldTargetId);
+                    ConnectNodes(sourceId, newTargetId, edge.StartProperties[0], edge.EndProperties[0]);
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"Target node with id '{newTargetId}' not found.");
+            }
+        }
+
+        protected virtual void OnStateChanged(StateChangeEventArgs e)
+        {
+            StateChanged?.Invoke(this, e);
+        }
+
+        public void NodeAdded(Node node)
+        {
+            OnStateChanged(new StateChangeEventArgs(StateChangeEventType.NodeAdded, node));
+        }
+
+        public void NodeRemoved(Node node)
+        {
+            OnStateChanged(new StateChangeEventArgs(StateChangeEventType.NodeRemoved, node));
+        }
+
+        public void EdgeAdded(Edge edge)
+        {
+            OnStateChanged(new StateChangeEventArgs(StateChangeEventType.EdgeAdded, null, edge));
+        }
+
+        public void EdgeRemoved(Edge edge)
+        {
+            OnStateChanged(new StateChangeEventArgs(StateChangeEventType.EdgeRemoved, null, edge));
         }
     }
 }

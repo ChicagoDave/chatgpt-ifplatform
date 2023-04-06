@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using GrammarLibrary;
+using StandardLibrary;
+using WorldModel;
 
 namespace ParserLibrary
 {
     public class Parser
     {
         private Grammar _grammar;
+        private World _world;
 
-        public Parser(Grammar grammar)
+        public Parser(Grammar grammar, World world)
         {
             _grammar = grammar;
+            _world = world;
         }
 
         /// <summary>
@@ -28,103 +32,92 @@ namespace ParserLibrary
             ParserResults results = new ParserResults();
 
             List<string> words = input.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList<string>();
-            List<Token> tokens = new List<Token>();
+            List<Token> tokens = TokenizeInput(words);
 
-            int nounCount = 0;
-            int wordCount = 0;
-
-            bool isVerb = IsVerb(words[wordCount]);
-
-            if (isVerb)
-            {
-                var potentialSentences = _grammar.Sentences[words[wordCount]].ToList<List<Token>>();
-
-                if (potentialSentences == null)
-                    throw new Exception("No sentences found for verb.");
-
-                List<Token> firstSentence = potentialSentences[0];
-                var actionType = firstSentence[0].ActionType;
-                var action = firstSentence[0].Delegate;
-
-                // If it's a meta verb, we're done parsing
-                if (actionType == ActionType.Meta)
-                {
-                    if (action == null)
-                        throw new Exception("Meta verb action is null.");
-                    else
-                        results.Action = action;
-
-                    results.Tokens = tokens;
-                    results.Success = true;
-                    return results;
-                } else
-                {
-                    // standard action, build token list
-                    wordCount++;
-
-                    for (int nextWord=wordCount; nextWord < words.Count; nextWord++)
-                    {
-                        // now we need to determine if the next word is one of:
-                        // noun, adjective, article, preposition
-                        // nouns and adjectives will be in the world model
-                        // articles and prepositions will be in the grammar sentence
-                    }
-                }
-            } else
-            {
-                results.Success = false;
-                results.Errors.Add("Invalid statement.");
-            }
-
-            // First tokenize the user input
-            //foreach (string word in words)
-            //{
-            //    if (IsVerb(word, out Action? action))
-            //    {
-            //        tokens.Add(new Token(TokenType.Verb, word, action, actionType));
-            //        actionType = ActionType.None;
-            //    }
-            //    else if (_grammar.Sentences.ContainsKey(word))
-            //    {
-            //        tokens.Add(new Token(TokenType.Noun, word, null, actionType));
-            //        actionType = ActionType.None;
-            //    }
-            //    else if (IsPreposition(word))
-            //    {
-            //        tokens.Add(new Token(TokenType.Preposition, word, null, actionType));
-            //        actionType = ActionType.None;
-            //    }
-            //    else if (IsArticle(word))
-            //    {
-            //        actionType = ActionType.Standard;
-            //    }
-            //    else if (IsAdjective(word))
-            //    {
-            //        tokens.Add(new Token(TokenType.Adjective, word, null, actionType));
-            //    }
-            //}
-
-            // Now check the world model
+            // TO DO - find delegate in grammar that matches the tokens
 
             return results;
         }
 
-        private bool IsVerb(string word)
+        public List<Token> TokenizeInput(List<string> words)
         {
-            if (_grammar.Sentences.ContainsKey(word))
-            {
-                var sentence = _grammar.Sentences[word][0];
+            List<Token> tokens = new List<Token>();
+            string? currentAdjective = null;
+            int nounCount = 0;
 
-                foreach (var token in sentence)
+            for (int i = 0; i < words.Count; i++)
+            {
+                var word = words[i];
+
+                if (i == 0) // First word should be a verb
                 {
-                    if (token.Type == TokenType.Verb)
+                    if (IsVerb(word))
                     {
-                        return true;
+                        tokens.Add(new Token(TokenType.Verb, word));
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid verb.");
+                    }
+                }
+                else // Subsequent words
+                {
+                    // Check if it's an adjective or noun in the world model
+                    var isNoun = IsNoun(word);
+
+                    if (isNoun)
+                    {
+                        TokenType nounTokenType;
+
+                        if (nounCount == 0)
+                        {
+                            nounTokenType = TokenType.Noun;
+                        }
+                        else if (nounCount == 1)
+                        {
+                            nounTokenType = TokenType.Second;
+                        }
+                        else
+                        {
+                            nounTokenType = TokenType.Third;
+                        }
+
+                        tokens.Add(new Token(nounTokenType, word));
+                        currentAdjective = null;
+                        nounCount++;
+                    }
+                    else if (IsAdjective(word))
+                    {
+                        tokens.Add(new Token(TokenType.Adjective, word));
+                        currentAdjective = word;
+                    }
+                    else if (IsArticle(word))
+                    {
+                        tokens.Add(new Token(TokenType.Article, word));
+                    }
+                    else if (IsPreposition(word))
+                    {
+                        tokens.Add(new Token(TokenType.Preposition, word));
+                    }
+                    else
+                    {
+                        throw new Exception($"Invalid word: {word}");
                     }
                 }
             }
 
+            return tokens;
+        }
+
+        private bool IsNoun(string word)
+        {
             return false;
+        }
+
+        private bool IsVerb(string word)
+        {
+            return _grammar.Sentences.Keys
+                .Any(verb => verb.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
 
         private bool IsPreposition(string word)
