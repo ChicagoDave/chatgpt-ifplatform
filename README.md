@@ -16,10 +16,30 @@ You can see the fundamental IF code interacting with the World Model.
 
 ### Status/TO DO List
 
-- match correct sentence from grammar library for tokenized sentence in Parser.Parse routine
-- identify noun, second, and third as appropriate
-- validate all nouns in world model
-- send token list to delegate action
-- implement basic actions TAKE, DROP, READ, PUT ON and all cardinal directions
-- Change TheHouse story to Cloak and Dagger
+- implement basic actions
+
+	* TAKE
+		- Grammar (completed)
+		- Execution
+
+	* DROP
+		- Grammar (completed)
+		- Execution
+
+	* READ
+		- Grammar
+		- Execution
+
+	* PUT ON
+		- Grammar
+		- Execution
+
+	* Compass Directions
+		- Grammar (completed)
+		- Execution
+
 - implement Text Engine and integrate with all text emissions
+
+- implement state changes
+
+- test Cloak of Darkness
