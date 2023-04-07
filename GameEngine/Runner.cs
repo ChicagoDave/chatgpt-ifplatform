@@ -11,6 +11,7 @@ namespace GameEngine
         private IStory _story;
         private Grammar _grammar;
         private Parser _parser;
+        private EventManager _eventManager;
 
         public GameEngine(IStory story)
         {
@@ -18,6 +19,17 @@ namespace GameEngine
             _story.InitializeWorld();
             _grammar = new Grammar(_story.World);
             _parser = new Parser(_grammar, _story.World);
+            _eventManager = new EventManager();
+
+            // Subscribe to events
+            _eventManager.RegisterEventHandler(EventManager.GameEvent.GameStart, _story.OnGameStart);
+            _eventManager.RegisterEventHandler(EventManager.GameEvent.PreTurn, _story.OnPreTurn);
+            _eventManager.RegisterEventHandler(EventManager.GameEvent.PostTurn, _story.OnPostTurn);
+            _eventManager.RegisterEventHandler(EventManager.GameEvent.GameEndWin, _story.OnGameEndWin);
+            _eventManager.RegisterEventHandler(EventManager.GameEvent.GameEndLose, _story.OnGameEndLose);
+
+            // Trigger GameStart event
+            _eventManager.TriggerEvent  (EventManager.GameEvent.GameStart);
         }
 
         public void Run()
@@ -26,6 +38,9 @@ namespace GameEngine
 
             while (true)
             {
+                // Trigger PreTurn event
+                _eventManager.TriggerEvent(EventManager.GameEvent.PreTurn);
+
                 Console.Write("> ");
                 string? input = Console.ReadLine();
 
@@ -51,10 +66,10 @@ namespace GameEngine
                 {
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
+
+                // Trigger PostTurn event
+                _eventManager.TriggerEvent(EventManager.GameEvent.PostTurn);
             }
         }
-
     }
-
-
 }

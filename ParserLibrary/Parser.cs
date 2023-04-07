@@ -42,7 +42,6 @@ namespace ParserLibrary
         public List<Token> TokenizeInput(List<string> words)
         {
             List<Token> tokens = new List<Token>();
-            string? currentAdjective = null;
             int nounCount = 0;
 
             for (int i = 0; i < words.Count; i++)
@@ -57,15 +56,20 @@ namespace ParserLibrary
                     }
                     else
                     {
-                        throw new Exception("Invalid verb.");
+                        tokens.Clear();
+                        return tokens;
                     }
                 }
                 else // Subsequent words
                 {
-                    // Check if it's an adjective or noun in the world model
-                    var isNoun = IsNoun(word);
+                    if (i < words.Count - 1 && IsAdjective(word) && IsNoun(words[i + 1]))
+                    {
+                        tokens.Add(new Token(TokenType.Adjective, word));
+                        i++; // Increment the loop counter to skip the next word
+                        word = words[i]; // Update the current word to the noun
+                    }
 
-                    if (isNoun)
+                    if (IsNoun(word))
                     {
                         TokenType nounTokenType;
 
@@ -83,13 +87,7 @@ namespace ParserLibrary
                         }
 
                         tokens.Add(new Token(nounTokenType, word));
-                        currentAdjective = null;
                         nounCount++;
-                    }
-                    else if (IsAdjective(word))
-                    {
-                        tokens.Add(new Token(TokenType.Adjective, word));
-                        currentAdjective = word;
                     }
                     else if (IsArticle(word))
                     {
@@ -101,7 +99,8 @@ namespace ParserLibrary
                     }
                     else
                     {
-                        throw new Exception($"Invalid word: {word}");
+                        tokens.Clear();
+                        return tokens;
                     }
                 }
             }
@@ -111,7 +110,9 @@ namespace ParserLibrary
 
         private bool IsNoun(string word)
         {
-            return false;
+            return _world.Nodes
+                .Where(pair => pair.Value.Data is IThing)
+                .Any(pair => ((IThing)pair.Value.Data).Name.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
 
         private bool IsVerb(string word)

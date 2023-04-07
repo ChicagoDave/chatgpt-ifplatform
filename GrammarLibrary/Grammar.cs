@@ -5,6 +5,11 @@ using WorldModel;
 
 namespace GrammarLibrary
 {
+    /// <summary>
+    /// Eventually we want to be able to handle:
+    ///     pot pot plant in plant pot
+    ///     verb adjective noun in adjective noun
+    /// </summary>
     public class Grammar
     {
         private List<Token> _components;
@@ -32,20 +37,24 @@ namespace GrammarLibrary
             return true;
         }
 
-        public Grammar Verb(string verb, Action<List<Token>?>? action = null)
+        public Grammar Verb(string verbs, Action<List<Token>?>? action = null)
         {
-            return AddVerb(verb, action, ActionType.Standard);
+            return AddVerb(verbs, action, ActionType.Standard);
+        }
+
+        private Grammar AddVerb(string verbs, Action<List<Token>?>? action, ActionType actionType)
+        {
+            var verbList = verbs.Split('/');
+            foreach (var verb in verbList)
+            {
+                _components.Add(new Token(TokenType.Verb, verb, action, actionType));
+            }
+            return this;
         }
 
         public Grammar MetaVerb(string verb, Action<List<Token>?>? action = null)
         {
             return AddVerb(verb, action, ActionType.Meta);
-        }
-
-        private Grammar AddVerb(string verb, Action<List<Token>?>? action, ActionType actionType)
-        {
-            _components.Add(new Token(TokenType.Verb, verb, action, actionType));
-            return this;
         }
 
         public Grammar Noun => AddToken(TokenType.Noun);

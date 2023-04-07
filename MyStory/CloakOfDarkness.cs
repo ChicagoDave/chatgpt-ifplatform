@@ -12,13 +12,13 @@ namespace MyStory
         public const string FrontYard = "frontYard";
     }
 
-    public class TheHouse : IStory
+    public class CloakOfDarkness : IStory
     {
         public World World { get; private set; }
         public Core Core { get; private set; }
         public Player Player => Core.Player;
 
-        public TheHouse()
+        public CloakOfDarkness()
         {
             World = new World();
             Core = new Core(World);
@@ -32,6 +32,37 @@ namespace MyStory
                 .CreateLocation(LocationId.LivingRoom, "Living Room", "A cozy living room with a comfortable couch.", LocationId.Kitchen, Direction.West)
                 .CreateLocation(LocationId.FrontPorch, "Front Porch", "A small front porch with a wooden bench.", LocationId.LivingRoom, Direction.South)
                 .CreateLocation(LocationId.FrontYard, "Front Yard", "A well-maintained front yard with a beautiful garden.", LocationId.FrontPorch, Direction.Out);
+
+            Thing potplant = new Thing("plant", "It's a pot plant");
+            potplant.Adjectives = new List<string> { "pot" };
+
+            Thing pot = new Thing("pot", "It's a plant pot");
+            pot.Adjectives = new List<string> { "plant" };
+        }
+
+        public void OnGameStart()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnPreTurn()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnPostTurn()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnGameEndWin()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnGameEndLose()
+        {
+            throw new NotImplementedException();
         }
     }
 

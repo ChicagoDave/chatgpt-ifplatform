@@ -76,14 +76,15 @@
             }
         }
 
-        public void MoveEdge(string sourceId, string oldTargetId, string newTargetId)
+        public void MoveEdge(string sourceId, string oldTargetId, string newTargetId, GraphProperty startProperty, GraphProperty endProperty)
         {
             if (Nodes.ContainsKey(newTargetId))
             {
                 Edge? edge = Nodes[sourceId].Edges.FirstOrDefault(e => e.EndNodeId == oldTargetId);
-                if (edge != null) {
+                if (edge != null)
+                {
                     RemoveEdge(sourceId, oldTargetId);
-                    ConnectNodes(sourceId, newTargetId, edge.StartProperties[0], edge.EndProperties[0]);
+                    ConnectNodes(sourceId, newTargetId, startProperty, endProperty);
                 }
             }
             else

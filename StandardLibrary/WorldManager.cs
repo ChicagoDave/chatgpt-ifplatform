@@ -16,7 +16,7 @@ namespace StandardLibrary
         public Player InitializePlayer(Player player)
         {
             player = new Player("Player", "You are a scruffy adventurer.");
-            _world.AddNode(player.Id, player, GraphProperty.Create("name", player.Name));
+            _world.AddNode(player.Id, player, GraphProperty.Create(Props.Name, player.Name));
 
             return player;
         }
@@ -24,7 +24,7 @@ namespace StandardLibrary
         public WorldManager CreateLocation(string id, string name, string description, string? targetId = null, Direction? direction = null)
         {
             Location location = new Location(name, description);
-            _world.AddNode(id, location, GraphProperty.Create("name",name));
+            _world.AddNode(id, location, GraphProperty.Create(Props.Name, name));
 
             if (targetId != null && direction != null)
             {
@@ -34,21 +34,22 @@ namespace StandardLibrary
                 }
 
                 if (direction != null)
-                    _world.ConnectNodes(id, targetId, GraphProperty.Create("leadsto", direction.Value.ToString()), GraphProperty.Create("leadsto", GetOppositeDirection(direction.Value).ToString()));
+                    _world.ConnectNodes(id, targetId, GraphProperty.Create(Props.LeadsTo, direction.Value.ToString()), GraphProperty.Create(Props.LeadsTo, GetOppositeDirection(direction.Value).ToString()));
             }
 
             return this;
         }
 
+
         private void CreateThing(Location location, IThing thing)
         {
-            _world.AddNode(thing.Id, thing, GraphProperty.Create("name", thing.Name));
-            _world.ConnectNodes(thing.Id, location.Id, GraphProperty.Create("relation","IsIn"), GraphProperty.Create("relation", "Contains"));
+            _world.AddNode(thing.Id, thing, GraphProperty.Create(Props.Name, thing.Name));
+            _world.ConnectNodes(thing.Id, location.Id, GraphProperty.Create(Props.RelatedTo, Props.IsIn), GraphProperty.Create(Props.RelatedTo, Props.Contains));
         }
 
         private void ConnectLocations(string StartId, string EndId, Direction direction)
         {
-            _world.ConnectNodes(StartId, EndId, GraphProperty.Create("leadsto", direction.ToString()), GraphProperty.Create("leadsto", GetOppositeDirection(direction).ToString()));
+            _world.ConnectNodes(StartId, EndId, GraphProperty.Create(Props.LeadsTo, direction.ToString()), GraphProperty.Create(Props.LeadsTo, GetOppositeDirection(direction).ToString()));
         }
 
         public Direction GetOppositeDirection(Direction direction)
@@ -84,6 +85,15 @@ namespace StandardLibrary
             }
         }
 
+    }
+
+    public static class Props
+    {
+        public const string LeadsTo = "LeadsTo";
+        public const string RelatedTo = "RelatedTo";
+        public const string IsIn = "IsIn";
+        public const string Contains = "Contains";
+        public const string Name = "Name";
     }
 }
 
