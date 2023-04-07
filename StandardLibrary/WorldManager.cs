@@ -21,10 +21,10 @@ namespace StandardLibrary
             return player;
         }
 
-        public WorldManager CreateLocation(string id, string name, string description, string? targetId = null, Direction? direction = null)
+        public WorldManager CreateLocation(string name, string description, string? targetId = null, Direction? direction = null)
         {
             Location location = new Location(name, description);
-            _world.AddNode(id, location, GraphProperty.Create(Props.Name, name));
+            _world.AddNode(IdGenerator.GetBase62(), location, GraphProperty.Create(Props.Name, name));
 
             if (targetId != null && direction != null)
             {
@@ -50,6 +50,11 @@ namespace StandardLibrary
         private void ConnectLocations(string StartId, string EndId, Direction direction)
         {
             _world.ConnectNodes(StartId, EndId, GraphProperty.Create(Props.LeadsTo, direction.ToString()), GraphProperty.Create(Props.LeadsTo, GetOppositeDirection(direction).ToString()));
+        }
+
+        public void SetDirectionFailureResponse(Node location, string direction, string failureResponse)
+        {
+            location.Properties.Add(GraphProperty.Create(direction + "_failure_response", failureResponse));
         }
 
         public Direction GetOppositeDirection(Direction direction)

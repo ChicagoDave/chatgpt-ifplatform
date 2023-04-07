@@ -25,13 +25,45 @@
 
         public void ConnectNodes(string startNodeId, string endNodeId, GraphProperty startProperty, GraphProperty endProperty)
         {
-            Edge toEdge = new Edge(startNodeId, endNodeId, startProperty, endProperty);
-            Nodes[startNodeId].Edges.Add(toEdge);
-            EdgeAdded(toEdge);
+            // Check if an edge between startNodeId and endNodeId already exists
+            Edge? existingEdge = FindExistingEdge(startNodeId, endNodeId);
 
-            Edge fromEdge = new Edge(endNodeId, startNodeId, endProperty, startProperty);
-            Nodes[endNodeId].Edges.Add(fromEdge);
-            EdgeAdded(fromEdge);
+            if (existingEdge != null)
+            {
+                throw new InvalidOperationException("An edge between the specified nodes already exists. To replace an edge, use the ReplaceEdge method.");
+            }
+            else
+            {
+                // Create a new edge and add it to both nodes
+                Edge bidirectionalEdge = new Edge(startNodeId, endNodeId, startProperty, endProperty);
+                Nodes[startNodeId].Edges.Add(bidirectionalEdge);
+                Nodes[endNodeId].Edges.Add(bidirectionalEdge);
+                EdgeAdded(bidirectionalEdge);
+            }
+        }
+
+        public void ReplaceOrAddEdge(string startNodeId, string endNodeId, GraphProperty startProperty, GraphProperty endProperty)
+        {
+            // Find existing edge and remove it
+            Edge? existingEdge = FindExistingEdge(startNodeId, endNodeId);
+
+            if (existingEdge != null)
+            {
+                // Remove the existing edge from both nodes
+                Nodes[startNodeId].Edges.Remove(existingEdge);
+                Nodes[endNodeId].Edges.Remove(existingEdge);
+            }
+
+            // Create a new edge and add it to both nodes
+            Edge bidirectionalEdge = new Edge(startNodeId, endNodeId, startProperty, endProperty);
+            Nodes[startNodeId].Edges.Add(bidirectionalEdge);
+            Nodes[endNodeId].Edges.Add(bidirectionalEdge);
+            EdgeAdded(bidirectionalEdge);
+        }
+
+        private Edge? FindExistingEdge(string startNodeId, string endNodeId)
+        {
+            return Nodes[startNodeId].Edges.FirstOrDefault(edge => edge.EndNodeId == endNodeId);
         }
 
         public void RemoveNode(string id)

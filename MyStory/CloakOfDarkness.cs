@@ -4,12 +4,13 @@ using Common;
 
 namespace MyStory
 {
-    public static class LocationId
+    public static class ObjectNames
     {
-        public const string Kitchen = "kitchen";
-        public const string LivingRoom = "livingRoom";
-        public const string FrontPorch = "frontPorch";
-        public const string FrontYard = "frontYard";
+        public const string onStartMessage = "Hurrying through the rainswept November night, you're glad to see the bright lights of the Opera House. It's surprising that there aren't more people about but, hey, what do you expect in a cheap demo game...?";
+        public const string FoyerOfTheOperaHouse = "Foyer of the Opera House";
+        public const string FoyerBar = "Foyer Bar";
+        public const string CloakRoom = "Cloak Room";
+        public const string Cloak = "cloak";
     }
 
     public class CloakOfDarkness : IStory
@@ -17,6 +18,10 @@ namespace MyStory
         public World World { get; private set; }
         public Core Core { get; private set; }
         public Player Player => Core.Player;
+
+        public bool UseScoring { get; set; } = true;
+
+        public int Score { get; private set; } = 0;
 
         public CloakOfDarkness()
         {
@@ -26,23 +31,21 @@ namespace MyStory
 
         public void InitializeWorld()
         {
-            Core.
-                WorldManager
-                .CreateLocation(LocationId.Kitchen, "Kitchen", "A clean and well-organized kitchen.")
-                .CreateLocation(LocationId.LivingRoom, "Living Room", "A cozy living room with a comfortable couch.", LocationId.Kitchen, Direction.West)
-                .CreateLocation(LocationId.FrontPorch, "Front Porch", "A small front porch with a wooden bench.", LocationId.LivingRoom, Direction.South)
-                .CreateLocation(LocationId.FrontYard, "Front Yard", "A well-maintained front yard with a beautiful garden.", LocationId.FrontPorch, Direction.Out);
+            Location foyerOfTheOperaHouse = new Location(ObjectNames.FoyerOfTheOperaHouse, "A clean and well-organized kitchen.");
+            foyerOfTheOperaHouse.Lit = () => true;
 
-            Thing potplant = new Thing("plant", "It's a pot plant");
-            potplant.Adjectives = new List<string> { "pot" };
 
-            Thing pot = new Thing("pot", "It's a plant pot");
-            pot.Adjectives = new List<string> { "plant" };
+                //.CreateLocation(ObjectNames.FoyerBar, "A cozy living room with a comfortable couch.", ObjectNames.FoyerOfTheOperaHouse, Direction.North)
+                //.CreateLocation(ObjectNames.CloakRoom, "A small front porch with a wooden bench.", ObjectNames.FoyerOfTheOperaHouse, Direction.East);
+
+            Thing cloak = new Thing(ObjectNames.Cloak, "A handsome cloak, of velvet trimmed with satin, and slightly splattered with raindrops. Its blackness is so deep that it almost seems to suck light from the room.");
+            cloak.Adjectives = new List<string>() { "handsome", "dark", "satin", "black" };
+            cloak.Wearable = ()=> true;            
         }
 
         public void OnGameStart()
         {
-            throw new NotImplementedException();
+            Console.WriteLine(ObjectNames.onStartMessage);
         }
 
         public void OnPreTurn()
@@ -63,6 +66,22 @@ namespace MyStory
         public void OnGameEndLose()
         {
             throw new NotImplementedException();
+        }
+
+        public void IncrementScore(int? amount)
+        {
+            if (amount == null)
+                Score = Score++;
+            else
+                Score = (int)(Score + amount);
+        }
+
+        public void DecrementScore(int? amount)
+        {
+            if (amount == null)
+                Score = Score--;
+            else
+                Score = (int)(Score - amount);
         }
     }
 

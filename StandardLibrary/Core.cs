@@ -25,18 +25,20 @@ namespace StandardLibrary
 
             var standardTake = _grammar.Verb("take/get/grab", Take).Noun.End;
             var metaExamine = _grammar.Verb("examine/x/ex", Examine).Noun.End;
-            var standardGoInNoun = _grammar.Verb("go", GoIn).In.Noun.End;
-            var standardGoNorth = _grammar.Verb("north/n", Go).End;
-            var standardGoNortheast = _grammar.Verb("northeast/ne", Go).End;
-            var standardGoEast = _grammar.Verb("east/e", Go).End;
-            var standardGoSoutheast = _grammar.Verb("southeast/se", Go).End;
-            var standardGoSouth = _grammar.Verb("south/s", Go).End;
-            var standardGoSouthwest = _grammar.Verb("southwest/sw", Go).End;
-            var standardGoWest = _grammar.Verb("west/w", Go).End;
-            var standardGoNorthwest = _grammar.Verb("northwest/nw", Go).End;
-            var standardGoIn = _grammar.Verb("in", Go).End;
-            var standardGoInPrep = _grammar.Verb("go", Go).In.End;
-            var standardGoOut = _grammar.Verb("out", Go).End;
+            var standardGoInNoun = _grammar.Verb("go", GoInNoun).In.Noun.End;
+            var standardGoNorth = _grammar.Direction("north/n", GoNorth).End;
+            var standardGoNortheast = _grammar.Direction("northeast/ne", GoNortheast).End;
+            var standardGoEast = _grammar.Direction("east/e", GoEast).End;
+            var standardGoSoutheast = _grammar.Direction("southeast/se", GoSoutheast).End;
+            var standardGoSouth = _grammar.Direction("south/s", GoSouth).End;
+            var standardGoSouthwest = _grammar.Direction("southwest/sw", GoSouthwest).End;
+            var standardGoWest = _grammar.Direction("west/w", GoWest).End;
+            var standardGoNorthwest = _grammar.Direction("northwest/nw", GoNorthwest).End;
+            var standardGoIn = _grammar.Verb("in", GoIn).End;
+            var standardGoInPrep = _grammar.Verb("go", GoIn).In.End;
+            var standardGoOut = _grammar.Direction("out", GoOut).End;
+            var standardGoUp = _grammar.Direction("up/u", GoUp).End;
+            var standardGoDown = _grammar.Direction("down/d", GoDown).End;
             var standardWait = _grammar.Verb("wait/z", Wait).End;
 
             var standardHangOn = _grammar.Verb("hang", HangOn).On.Noun.End;
@@ -70,16 +72,62 @@ namespace StandardLibrary
             Console.WriteLine("You examine the item.");
         }
 
-        private void Go(List<Token>? tokens)
+        private void GoNorth(List<Token>? tokens)
         {
             Console.WriteLine("You go somewhere.");
         }
 
+        private void GoNortheast(List<Token>? tokens)
+        {
+            Console.WriteLine("You go somewhere.");
+        }
+        private void GoEast(List<Token>? tokens)
+        {
+            Console.WriteLine("You go somewhere.");
+        }
+        private void GoSoutheast(List<Token>? tokens)
+        {
+            Console.WriteLine("You go somewhere.");
+        }
+        private void GoSouth(List<Token>? tokens)
+        {
+            Console.WriteLine("You go somewhere.");
+        }
+        private void GoSouthwest(List<Token>? tokens)
+        {
+            Console.WriteLine("You go somewhere.");
+        }
+        private void GoWest(List<Token>? tokens)
+        {
+            Console.WriteLine("You go somewhere.");
+        }
+        private void GoNorthwest(List<Token>? tokens)
+        {
+            Console.WriteLine("You go somewhere.");
+        }
+        private void GoInNoun(List<Token>? tokens)
+        {
+            Console.WriteLine("You go somewhere.");
+        }
         private void GoIn(List<Token>? tokens)
+        {
+            Console.WriteLine("You go somewhere.");
+        }
+
+        private void GoOut(List<Token>? tokens)
         {
             Console.WriteLine("You go in the thing.");
         }
 
+        private void GoUp(List<Token>? tokens)
+        {
+            Console.WriteLine("You go in the thing.");
+        }
+
+        private void GoDown(List<Token>? tokens)
+        {
+            Console.WriteLine("You go in the thing.");
+        }
         private void CustomGo(List<Token>? tokens)
         {
             Console.WriteLine("You go somewhere using a custom action.");

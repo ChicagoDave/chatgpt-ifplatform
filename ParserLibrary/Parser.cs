@@ -48,11 +48,16 @@ namespace ParserLibrary
             {
                 var word = words[i];
 
-                if (i == 0) // First word should be a verb
+                if (i == 0) // First word should be a verb or direction
                 {
                     if (IsVerb(word))
                     {
                         tokens.Add(new Token(TokenType.Verb, word));
+                    }
+                    else if (IsDirection(word))
+                    {
+                        tokens.Add(new Token(TokenType.Direction, word));
+                        return tokens;
                     }
                     else
                     {
@@ -106,6 +111,11 @@ namespace ParserLibrary
             }
 
             return tokens;
+        }
+
+        private bool IsDirection(string word)
+        {
+            return Enum.GetNames(typeof(Direction)).Any(d => d.Equals(word, StringComparison.OrdinalIgnoreCase));
         }
 
         private bool IsNoun(string word)

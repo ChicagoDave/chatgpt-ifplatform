@@ -37,6 +37,21 @@ namespace GrammarLibrary
             return true;
         }
 
+        public Grammar Direction(string directions, Action<List<Token>> action)
+        {
+            return AddDirection(directions, action, ActionType.Standard);
+        }
+
+        private Grammar AddDirection(string directions, Action<List<Token>?>? action, ActionType actionType)
+        {
+            var directionList = directions.Split('/');
+            foreach (var direction in directionList)
+            {
+                _components.Add(new Token(TokenType.Direction, direction, action, actionType));
+            }
+            return this;
+        }
+
         public Grammar Verb(string verbs, Action<List<Token>?>? action = null)
         {
             return AddVerb(verbs, action, ActionType.Standard);
@@ -109,7 +124,14 @@ namespace GrammarLibrary
                     _sentences[verb] = new List<List<Token>>();
                 }
 
-                _sentences[verb].Add(new List<Token>(_components));
+                var sentenceTokens = new List<Token>(_components);
+                var directionToken = sentenceTokens.FirstOrDefault(t => t.Type == TokenType.Direction);
+                if (directionToken != null)
+                {
+                    directionToken.Delegate = verbToken.Delegate;
+                }
+
+                _sentences[verb].Add(sentenceTokens);
             }
 
             _components.Clear();
@@ -156,7 +178,8 @@ namespace GrammarLibrary
         Third,
         Adjective,
         Article,
-        Preposition
+        Preposition,
+        Direction
     }
 
     public class Token
