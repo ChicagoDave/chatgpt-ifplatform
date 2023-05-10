@@ -31,8 +31,7 @@ namespace MyStory
 
         public void InitializeWorld()
         {
-            Location foyerOfTheOperaHouse = new Location(ObjectNames.FoyerOfTheOperaHouse, "A clean and well-organized kitchen.");
-            foyerOfTheOperaHouse.Lit = () => true;
+            Core.WorldManager.AddLocation(ObjectNames.FoyerOfTheOperaHouse, "A clean and well-organized kitchen.");
 
 
                 //.CreateLocation(ObjectNames.FoyerBar, "A cozy living room with a comfortable couch.", ObjectNames.FoyerOfTheOperaHouse, Direction.North)

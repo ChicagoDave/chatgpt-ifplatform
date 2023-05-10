@@ -54,7 +54,7 @@ namespace StandardLibrary
             // Override the "go" action
             var goInNoun = new List<Token>
             {
-                new Token(TokenType.Verb, "go", Go, ActionType.Standard),
+                new Token(TokenType.Verb, "go", GoIn, ActionType.Standard),
                 new Token(TokenType.Preposition, "in"),
                 new Token(TokenType.Noun)
             };

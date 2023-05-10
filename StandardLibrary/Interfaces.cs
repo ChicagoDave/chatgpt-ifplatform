@@ -24,6 +24,13 @@ namespace StandardLibrary
         public Func<bool>? Heard { get; set; }
     }
 
+    public interface IContainer : IThing
+    {
+        public Func<bool>? Closeable { get; set; }
+        public Func<int>? MaximumWeight { get; set; }
+        public Func<int>? MaximumSize { get; set; }
+    }
+
     public interface IPerson : IThing
     {
         bool Alive { get; set; }

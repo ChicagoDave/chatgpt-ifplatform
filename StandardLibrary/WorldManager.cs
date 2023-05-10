@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using WorldModel;
 
 namespace StandardLibrary
@@ -21,10 +22,11 @@ namespace StandardLibrary
             return player;
         }
 
-        public WorldManager CreateLocation(string name, string description, string? targetId = null, Direction? direction = null)
+        public WorldManager AddLocation(string name, string description, string? targetId = null, Direction? direction = null)
         {
             Location location = new Location(name, description);
-            _world.AddNode(IdGenerator.GetBase62(), location, GraphProperty.Create(Props.Name, name));
+            string sourceId = IdGenerator.GetBase62();
+            _world.AddNode(sourceId, location, GraphProperty.Create(Props.Name, name));
 
             if (targetId != null && direction != null)
             {
@@ -34,14 +36,13 @@ namespace StandardLibrary
                 }
 
                 if (direction != null)
-                    _world.ConnectNodes(id, targetId, GraphProperty.Create(Props.LeadsTo, direction.Value.ToString()), GraphProperty.Create(Props.LeadsTo, GetOppositeDirection(direction.Value).ToString()));
+                    _world.ConnectNodes(sourceId, targetId, GraphProperty.Create(Props.LeadsTo, direction.Value.ToString()), GraphProperty.Create(Props.LeadsTo, GetOppositeDirection(direction.Value).ToString()));
             }
 
             return this;
         }
 
-
-        private void CreateThing(Location location, IThing thing)
+        private void AddThing(Location location, IThing thing)
         {
             _world.AddNode(thing.Id, thing, GraphProperty.Create(Props.Name, thing.Name));
             _world.ConnectNodes(thing.Id, location.Id, GraphProperty.Create(Props.RelatedTo, Props.IsIn), GraphProperty.Create(Props.RelatedTo, Props.Contains));
